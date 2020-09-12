@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue ToDo list</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        ul {
+            width: 300px;
+        }
+        button {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>ToDo Lists</h1>
+        <input type="text" v-model="input_task" v-on:keyup.enter="add_task">
+        <ul>
+           <li v-for="(task, index) in tasks">
+               {{ task }}
+               <button v-on:click="delete_task(index, task)">delete</button>
+           </li> 
+        </ul>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            created: function(){
+                for(let i = 0; i < localStorage.length; i++){
+                    let key = localStorage.key(i);
+                    this.tasks.push(localStorage.getItem(key));
+                }
+            },
+            data: {
+                input_task: '',
+                tasks : []
+            },
+            methods: {
+                add_task: function(){
+                    var val = this.input_task;
+                    this.tasks.push(val);
+                    this.input_task = '';
+                    localStorage.setItem(val, val);
+                },
+                delete_task: function(index, task){
+                    this.tasks.splice(index, 1);
+                    localStorage.removeItem(task);
+                }
+            }
+        })
+    </script>
+</body>
+</html>
